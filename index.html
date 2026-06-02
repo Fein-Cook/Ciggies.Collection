@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --surface: #faf9f6;
+    --card: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1a1814;
+    --text-muted: #7a7568;
+    --text-faint: #b0aa9e;
+    --accent: #c8472a;
+    --accent-light: #f9ede9;
+    --star: #d4a017;
+    --gold: #c9a227;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-dot { color: var(--accent); }
+  nav { display: flex; gap: 4px; }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--text-muted);
+    padding: 6px 12px; border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--bg); color: var(--text);
+  }
+  .add-btn {
+    background: var(--accent); color: #fff;
+    border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    padding: 7px 16px; border-radius: 6px;
+    display: flex; align-items: center; gap: 6px;
+    transition: opacity 0.15s;
+  }
+  .add-btn:hover { opacity: 0.88; }
+
+  /* ── HERO STATS ── */
+  .hero {
+    padding: 2.5rem 2rem 1.5rem;
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 2rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 700;
+    line-height: 1.1; letter-spacing: -0.03em;
+  }
+  .hero-sub {
+    font-size: 0.9rem; color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .stats-row {
+    display: flex; gap: 1.5rem; align-items: flex-end;
+  }
+  .stat {
+    text-align: right;
+  }
+  .stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.8rem; font-weight: 500;
+    line-height: 1; color: var(--text);
+  }
+  .stat-label {
+    font-size: 0.75rem; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+  .stat-divider {
+    width: 1px; height: 40px;
+    background: var(--border-strong); opacity: 0.5;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 2rem 1.5rem;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .filter-group { display: flex; gap: 4px; }
+  .filter-chip {
+    background: none; border: 1px solid var(--border-strong);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; color: var(--text-muted);
+    padding: 5px 12px; border-radius: 20px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { border-color: var(--text-muted); color: var(--text); }
+  .filter-chip.active {
+    background: var(--text); border-color: var(--text);
+    color: #fff;
+  }
+  .search-wrap {
+    margin-left: auto;
+    position: relative;
+  }
+  .search-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 6px 14px 6px 32px;
+    color: var(--text); width: 200px;
+    outline: none; transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--text-faint); font-size: 14px; pointer-events: none;
+  }
+  .view-toggle {
+    display: flex; gap: 2px;
+    background: var(--bg); border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 2px;
+  }
+  .view-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 5px 8px; border-radius: 4px; font-size: 14px;
+    color: var(--text-muted); transition: all 0.15s;
+  }
+  .view-btn.active { background: var(--card); color: var(--text); }
+
+  /* ── GRID ── */
+  .grid-wrap {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+  #collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  #collection-grid.list-view {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── PACK CARD ── */
+  .pack-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    position: relative;
+  }
+  .pack-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    border-color: var(--border-strong);
+  }
+  .pack-img-wrap {
+    width: 100%; aspect-ratio: 3/4;
+    background: var(--bg);
+    overflow: hidden; position: relative;
+  }
+  .pack-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .pack-card:hover .pack-img-wrap img { transform: scale(1.04); }
+  .pack-no-img {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; color: var(--text-faint);
+  }
+  .pack-no-img-icon { font-size: 2.5rem; }
+  .pack-no-img-label { font-size: 0.75rem; }
+  .pack-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.7rem; font-weight: 500;
+    padding: 3px 8px;
+    color: var(--text-muted);
+    backdrop-filter: blur(4px);
+  }
+  .pack-info {
+    padding: 10px 12px 12px;
+    border-top: 1px solid var(--border);
+  }
+  .pack-brand {
+    font-size: 0.7rem; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    font-weight: 500; margin-bottom: 2px;
+  }
+  .pack-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem; font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pack-variant {
+    font-size: 0.75rem; color: var(--text-muted);
+    margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pack-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 8px;
+  }
+  .stars { display: flex; gap: 1px; }
+  .star {
+    font-size: 12px; cursor: pointer;
+    color: var(--border-strong);
+    transition: color 0.1s;
+    line-height: 1;
+  }
+  .star.lit { color: var(--star); }
+  .pack-country {
+    font-size: 0.72rem; color: var(--text-faint);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* List view */
+  #collection-grid.list-view .pack-card {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0;
+  }
+  #collection-grid.list-view .pack-img-wrap {
+    aspect-ratio: 1; height: 72px; width: 72px;
+    border-radius: 0;
+  }
+  #collection-grid.list-view .pack-info {
+    padding: 10px 14px;
+    border-top: none; border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  #collection-grid.list-view .pack-badge {
+    top: 6px; right: 6px;
+  }
+
+  /* empty state */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center; padding: 6rem 2rem;
+    color: var(--text-muted);
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 6px; color: var(--text); }
+  .empty-sub { font-size: 0.85rem; }
+
+  /* ── MODAL BACKDROP ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,12,8,0.6);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--card);
+    border-radius: 16px;
+    width: 100%; max-width: 520px;
+    max-height: 90vh; overflow-y: auto;
+    transform: translateY(16px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700;
+  }
+  .modal-close {
+    background: none; border: none; cursor: pointer;
+    font-size: 1.3rem; color: var(--text-muted);
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; transition: background 0.15s;
+  }
+  .modal-close:hover { background: var(--bg); }
+  .modal-body { padding: 1.25rem 1.5rem 1.5rem; }
+
+  /* Form */
+  .form-row { margin-bottom: 1rem; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  label {
+    display: block; font-size: 0.78rem; font-weight: 500;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 5px;
+  }
+  input[type=text], input[type=number], select, textarea {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    padding: 8px 12px; outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 72px; }
+
+  /* Image upload zone */
+  .img-upload {
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    text-align: center; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+  }
+  .img-upload:hover { border-color: var(--accent); background: var(--accent-light); }
+  .img-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .img-upload-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .img-upload-label { font-size: 0.82rem; color: var(--text-muted); }
+  .img-preview {
+    width: 100%; max-height: 220px; object-fit: contain;
+    border-radius: var(--radius-sm); margin-top: 10px;
+    display: none;
+  }
+  .img-preview.show { display: block; }
+
+  /* Star rating in form */
+  .star-picker { display: flex; gap: 4px; margin-top: 4px; }
+  .star-pick {
+    font-size: 1.4rem; cursor: pointer;
+    color: var(--border-strong);
+    transition: color 0.1s, transform 0.1s;
+    line-height: 1;
+  }
+  .star-pick:hover, .star-pick.lit { color: var(--star); }
+  .star-pick:hover { transform: scale(1.15); }
+
+  /* Form actions */
+  .form-actions {
+    display: flex; gap: 8px; justify-content: flex-end;
+    padding-top: 1rem; border-top: 1px solid var(--border); margin-top: 1rem;
+  }
+  .btn-cancel {
+    background: none; border: 1px solid var(--border-strong);
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    color: var(--text-muted); padding: 8px 18px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn-save {
+    background: var(--accent); border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    color: #fff; padding: 8px 20px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-save:hover { opacity: 0.88; }
+
+  /* ── DETAIL MODAL ── */
+  .detail-img {
+    width: 100%; max-height: 300px; object-fit: contain;
+    background: var(--bg); border-radius: var(--radius-sm);
+  }
+  .detail-img-placeholder {
+    width: 100%; height: 200px; background: var(--bg);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; color: var(--text-faint);
+  }
+  .detail-brand {
+    font-size: 0.75rem; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500;
+    margin-top: 14px; margin-bottom: 2px;
+  }
+  .detail-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700;
+    line-height: 1.15; margin-bottom: 4px;
+  }
+  .detail-variant { color: var(--text-muted); font-size: 0.9rem; }
+  .detail-stars { display: flex; gap: 3px; margin: 10px 0; }
+  .detail-star { font-size: 18px; color: var(--border-strong); }
+  .detail-star.lit { color: var(--star); }
+  .detail-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-top: 14px;
+  }
+  .detail-field {
+    background: var(--bg); border-radius: var(--radius-sm);
+    padding: 8px 12px;
+  }
+  .detail-field-label {
+    font-size: 0.68rem; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 2px;
+  }
+  .detail-field-val {
+    font-size: 0.88rem; font-weight: 500;
+    color: var(--text);
+  }
+  .detail-notes {
+    margin-top: 12px; padding: 10px 12px;
+    background: var(--bg); border-radius: var(--radius-sm);
+    font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;
+  }
+  .detail-actions {
+    display: flex; gap: 8px; margin-top: 14px;
+  }
+  .btn-edit {
+    flex: 1; background: var(--text); border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    color: #fff; padding: 9px; border-radius: var(--radius-sm); cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-edit:hover { opacity: 0.82; }
+  .btn-delete {
+    background: none; border: 1px solid #f0b0a0;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    color: var(--accent); padding: 9px 16px; border-radius: var(--radius-sm); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-delete:hover { background: var(--accent-light); }
+
+  /* ── TOP RANKINGS TAB ── */
+  #rankings-panel { display: none; }
+  #rankings-panel.active { display: block; }
+  #collection-panel.hidden { display: none; }
+
+  .rankings-wrap {
+    max-width: 700px; margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+  .ranking-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .ranking-item:hover { opacity: 0.75; }
+  .rank-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem; font-weight: 500;
+    color: var(--text-faint); width: 28px; flex-shrink: 0; text-align: right;
+  }
+  .rank-num.gold { color: var(--gold); }
+  .rank-img {
+    width: 48px; height: 64px; border-radius: 6px;
+    object-fit: cover; background: var(--bg); flex-shrink: 0;
+  }
+  .rank-img-placeholder {
+    width: 48px; height: 64px; border-radius: 6px;
+    background: var(--bg); display: flex; align-items: center;
+    justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+    color: var(--text-faint);
+  }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-brand { font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; }
+  .rank-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 500; }
+  .rank-variant { font-size: 0.8rem; color: var(--text-muted); }
+  .rank-stars { display: flex; gap: 2px; margin-top: 4px; }
+  .rank-star { font-size: 11px; color: var(--border-strong); }
+  .rank-star.lit { color: var(--star); }
+  .rank-score {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem; font-weight: 500; color: var(--text);
+  }
+  .empty-rankings {
+    text-align: center; padding: 5rem 0; color: var(--text-muted);
+  }
+
+  /* toast */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: #fff;
+    font-size: 0.82rem; padding: 8px 16px; border-radius: 20px;
+    opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 500;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    烟<span class="logo-dot">·</span> My Collection
+  </div>
+  <nav>
+    <button class="nav-btn active" id="tab-collection" onclick="switchTab('collection')">Collection</button>
+    <button class="nav-btn" id="tab-rankings" onclick="switchTab('rankings')">Rankings</button>
+  </nav>
+  <button class="add-btn" onclick="openAddModal()">
+    + Add Pack
+  </button>
+</header>
+
+<!-- COLLECTION PANEL -->
+<div id="collection-panel">
+  <div class="hero">
+    <div>
+      <div class="hero-title">The Archive</div>
+      <div class="hero-sub">Your personal cigarette pack collection</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Packs</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num" id="stat-brands">0</div>
+        <div class="stat-label">Brands</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num" id="stat-avg">—</div>
+        <div class="stat-label">Avg. Rating</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <button class="filter-chip active" data-sort="newest" onclick="setSort(this,'newest')">Newest</button>
+      <button class="filter-chip" data-sort="rating" onclick="setSort(this,'rating')">Top Rated</button>
+      <button class="filter-chip" data-sort="name" onclick="setSort(this,'name')">A–Z</button>
+      <button class="filter-chip" data-sort="brand" onclick="setSort(this,'brand')">Brand</button>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" placeholder="Search packs…" id="search-input" oninput="renderGrid()">
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vbtn-grid" onclick="setView('grid')" title="Grid view">⊞</button>
+      <button class="view-btn" id="vbtn-list" onclick="setView('list')" title="List view">☰</button>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div id="collection-grid"></div>
+  </div>
+</div>
+
+<!-- RANKINGS PANEL -->
+<div id="rankings-panel">
+  <div class="hero">
+    <div>
+      <div class="hero-title">Rankings</div>
+      <div class="hero-sub">Your top picks, sorted by rating</div>
+    </div>
+  </div>
+  <div class="rankings-wrap">
+    <div id="rankings-list"></div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="form-modal-title">Add New Pack</div>
+      <button class="modal-close" onclick="closeFormModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <div class="form-row">
+        <label>Pack Photo</label>
+        <div class="img-upload" id="img-upload-zone">
+          <input type="file" accept="image/*" id="img-file-input" onchange="handleImgUpload(event)">
+          <div class="img-upload-icon">📷</div>
+          <div class="img-upload-label">Click or drag to upload pack image</div>
+        </div>
+        <img class="img-preview" id="img-preview" src="" alt="Preview">
+      </div>
+
+      <div class="form-row-2">
+        <div>
+          <label>Brand *</label>
+          <input type="text" id="f-brand" placeholder="e.g. Marlboro">
+        </div>
+        <div>
+          <label>Name *</label>
+          <input type="text" id="f-name" placeholder="e.g. Gold">
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div>
+          <label>Variant / Edition</label>
+          <input type="text" id="f-variant" placeholder="e.g. Limited 2023">
+        </div>
+        <div>
+          <label>Country of Origin</label>
+          <input type="text" id="f-country" placeholder="e.g. Australia">
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div>
+          <label>Format</label>
+          <select id="f-format">
+            <option value="">— Select —</option>
+            <option>King Size</option>
+            <option>Regular</option>
+            <option>Slim</option>
+            <option>Super Slim</option>
+            <option>100s</option>
+            <option>Cigarillo</option>
+            <option>Cigar</option>
+            <option>RYO</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label>Acquired</label>
+          <input type="text" id="f-acquired" placeholder="e.g. Jan 2024, Bali">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Your Rating</label>
+        <div class="star-picker" id="star-picker">
+          <span class="star-pick" data-v="1" onclick="setFormRating(1)">★</span>
+          <span class="star-pick" data-v="2" onclick="setFormRating(2)">★</span>
+          <span class="star-pick" data-v="3" onclick="setFormRating(3)">★</span>
+          <span class="star-pick" data-v="4" onclick="setFormRating(4)">★</span>
+          <span class="star-pick" data-v="5" onclick="setFormRating(5)">★</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Notes</label>
+        <textarea id="f-notes" placeholder="Tasting notes, where you found it, what you thought…"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeFormModal()">Cancel</button>
+        <button class="btn-save" onclick="savePack()">Save Pack</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Pack Details</div>
+      <button class="modal-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const STORE_KEY = 'cigcollection_v1';
+let collection = [];
+let formRating = 0;
+let currentSort = 'newest';
+let currentView = 'grid';
+let currentImgDataUrl = '';
+let editingId = null;
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    collection = raw ? JSON.parse(raw) : [];
+  } catch(e) { collection = []; }
+}
+
+function saveData() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(collection));
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+// ── RENDER GRID ──
+function renderGrid() {
+  const grid = document.getElementById('collection-grid');
+  const query = document.getElementById('search-input').value.toLowerCase().trim();
+  let items = [...collection];
+
+  if (query) {
+    items = items.filter(p =>
+      (p.brand + p.name + p.variant + p.country + p.notes).toLowerCase().includes(query)
+    );
+  }
+
+  if (currentSort === 'newest') items.sort((a,b) => b.addedAt - a.addedAt);
+  else if (currentSort === 'rating') items.sort((a,b) => (b.rating||0) - (a.rating||0));
+  else if (currentSort === 'name') items.sort((a,b) => a.name.localeCompare(b.name));
+  else if (currentSort === 'brand') items.sort((a,b) => a.brand.localeCompare(b.brand));
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🚬</div>
+      <div class="empty-title">${query ? 'No results found' : 'No packs yet'}</div>
+      <div class="empty-sub">${query ? 'Try a different search' : 'Hit "+ Add Pack" to start your archive'}</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(p => packCardHTML(p)).join('');
+  updateStats();
+}
+
+function packCardHTML(p) {
+  const stars = [1,2,3,4,5].map(i =>
+    `<span class="star${i <= (p.rating||0) ? ' lit' : ''}">★</span>`
+  ).join('');
+  const imgHtml = p.img
+    ? `<img src="${p.img}" alt="${p.brand} ${p.name}" loading="lazy">`
+    : `<div class="pack-no-img"><div class="pack-no-img-icon">📦</div><div class="pack-no-img-label">No photo</div></div>`;
+  const badge = p.format ? `<div class="pack-badge">${p.format}</div>` : '';
+  return `<div class="pack-card" onclick="openDetail('${p.id}')">
+    <div class="pack-img-wrap">${imgHtml}${badge}</div>
+    <div class="pack-info">
+      <div class="pack-brand">${escHtml(p.brand)}</div>
+      <div class="pack-name">${escHtml(p.name)}</div>
+      ${p.variant ? `<div class="pack-variant">${escHtml(p.variant)}</div>` : ''}
+      <div class="pack-meta">
+        <div class="stars">${stars}</div>
+        ${p.country ? `<div class="pack-country">${escHtml(p.country)}</div>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = collection.length;
+  const brands = new Set(collection.map(p => p.brand.toLowerCase())).size;
+  document.getElementById('stat-brands').textContent = brands;
+  const rated = collection.filter(p => p.rating);
+  if (rated.length) {
+    const avg = rated.reduce((s,p) => s + p.rating, 0) / rated.length;
+    document.getElementById('stat-avg').textContent = avg.toFixed(1);
+  } else {
+    document.getElementById('stat-avg').textContent = '—';
+  }
+}
+
+// ── RANKINGS ──
+function renderRankings() {
+  const list = document.getElementById('rankings-list');
+  const rated = [...collection].filter(p => p.rating > 0).sort((a,b) => b.rating - a.rating);
+  const unrated = [...collection].filter(p => !p.rating);
+  const all = [...rated, ...unrated];
+  if (!all.length) {
+    list.innerHTML = `<div class="empty-rankings"><div style="font-size:2.5rem;margin-bottom:10px">☆</div><div style="font-family:'Playfair Display',serif;font-size:1.2rem">Nothing ranked yet</div><div style="font-size:0.85rem;margin-top:4px;color:var(--text-faint)">Add packs and give them a star rating</div></div>`;
+    return;
+  }
+  list.innerHTML = all.map((p, i) => {
+    const stars = [1,2,3,4,5].map(n => `<span class="rank-star${n<=(p.rating||0)?' lit':''}">★</span>`).join('');
+    const imgHtml = p.img
+      ? `<img class="rank-img" src="${p.img}" alt="">`
+      : `<div class="rank-img-placeholder">📦</div>`;
+    return `<div class="ranking-item" onclick="openDetail('${p.id}')">
+      <div class="rank-num${i<3?' gold':''}">${i+1}</div>
+      ${imgHtml}
+      <div class="rank-info">
+        <div class="rank-brand">${escHtml(p.brand)}</div>
+        <div class="rank-name">${escHtml(p.name)}</div>
+        ${p.variant?`<div class="rank-variant">${escHtml(p.variant)}</div>`:''}
+        <div class="rank-stars">${stars}</div>
+      </div>
+      <div class="rank-score">${p.rating ? p.rating + '.0' : '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.getElementById('tab-collection').classList.toggle('active', tab==='collection');
+  document.getElementById('tab-rankings').classList.toggle('active', tab==='rankings');
+  document.getElementById('collection-panel').classList.toggle('hidden', tab!=='collection');
+  document.getElementById('rankings-panel').classList.toggle('active', tab==='rankings');
+  if (tab === 'rankings') renderRankings();
+}
+
+// ── SORT / VIEW ──
+function setSort(el, sort) {
+  document.querySelectorAll('[data-sort]').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentSort = sort;
+  renderGrid();
+}
+function setView(v) {
+  currentView = v;
+  const grid = document.getElementById('collection-grid');
+  grid.classList.toggle('list-view', v === 'list');
+  document.getElementById('vbtn-grid').classList.toggle('active', v==='grid');
+  document.getElementById('vbtn-list').classList.toggle('active', v==='list');
+}
+
+// ── ADD / EDIT MODAL ──
+function openAddModal() {
+  editingId = null;
+  document.getElementById('form-modal-title').textContent = 'Add New Pack';
+  clearForm();
+  document.getElementById('form-overlay').classList.add('open');
+}
+
+function openEditModal(id) {
+  const p = collection.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  document.getElementById('form-modal-title').textContent = 'Edit Pack';
+  document.getElementById('f-brand').value = p.brand || '';
+  document.getElementById('f-name').value = p.name || '';
+  document.getElementById('f-variant').value = p.variant || '';
+  document.getElementById('f-country').value = p.country || '';
+  document.getElementById('f-format').value = p.format || '';
+  document.getElementById('f-acquired').value = p.acquired || '';
+  document.getElementById('f-notes').value = p.notes || '';
+  setFormRating(p.rating || 0);
+  currentImgDataUrl = p.img || '';
+  const prev = document.getElementById('img-preview');
+  if (p.img) { prev.src = p.img; prev.classList.add('show'); }
+  else { prev.src=''; prev.classList.remove('show'); }
+  document.getElementById('form-overlay').classList.add('open');
+}
+
+function closeFormModal() {
+  document.getElementById('form-overlay').classList.remove('open');
+  clearForm();
+}
+
+function clearForm() {
+  ['f-brand','f-name','f-variant','f-country','f-acquired','f-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-format').value = '';
+  document.getElementById('img-file-input').value = '';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-preview').classList.remove('show');
+  currentImgDataUrl = '';
+  setFormRating(0);
+}
+
+function handleImgUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    currentImgDataUrl = ev.target.result;
+    const prev = document.getElementById('img-preview');
+    prev.src = currentImgDataUrl;
+    prev.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+function setFormRating(v) {
+  formRating = v;
+  document.querySelectorAll('.star-pick').forEach(s => {
+    s.classList.toggle('lit', parseInt(s.dataset.v) <= v);
+  });
+}
+
+function savePack() {
+  const brand = document.getElementById('f-brand').value.trim();
+  const name = document.getElementById('f-name').value.trim();
+  if (!brand || !name) { showToast('Brand and Name are required'); return; }
+
+  const pack = {
+    id: editingId || uid(),
+    brand, name,
+    variant: document.getElementById('f-variant').value.trim(),
+    country: document.getElementById('f-country').value.trim(),
+    format: document.getElementById('f-format').value,
+    acquired: document.getElementById('f-acquired').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+    rating: formRating,
+    img: currentImgDataUrl,
+    addedAt: editingId ? (collection.find(x=>x.id===editingId)?.addedAt || Date.now()) : Date.now()
+  };
+
+  if (editingId) {
+    const idx = collection.findIndex(x => x.id === editingId);
+    collection[idx] = pack;
+    showToast('Pack updated');
+  } else {
+    collection.unshift(pack);
+    showToast('Pack added to your archive');
+  }
+
+  saveData();
+  renderGrid();
+  closeFormModal();
+  closeDetailModal();
+}
+
+// ── DETAIL MODAL ──
+function openDetail(id) {
+  const p = collection.find(x => x.id === id);
+  if (!p) return;
+  const stars = [1,2,3,4,5].map(i =>
+    `<span class="detail-star${i<=(p.rating||0)?' lit':''}">★</span>`
+  ).join('');
+  const imgHtml = p.img
+    ? `<img class="detail-img" src="${p.img}" alt="${p.brand} ${p.name}">`
+    : `<div class="detail-img-placeholder">📦</div>`;
+
+  const fields = [];
+  if (p.format) fields.push(['Format', p.format]);
+  if (p.country) fields.push(['Country', p.country]);
+  if (p.acquired) fields.push(['Acquired', p.acquired]);
+  const gridHtml = fields.length ? `<div class="detail-grid">
+    ${fields.map(([l,v]) => `<div class="detail-field"><div class="detail-field-label">${l}</div><div class="detail-field-val">${escHtml(v)}</div></div>`).join('')}
+  </div>` : '';
+
+  document.getElementById('detail-body').innerHTML = `
+    ${imgHtml}
+    <div class="detail-brand">${escHtml(p.brand)}</div>
+    <div class="detail-name">${escHtml(p.name)}</div>
+    ${p.variant ? `<div class="detail-variant">${escHtml(p.variant)}</div>` : ''}
+    <div class="detail-stars">${stars}</div>
+    ${gridHtml}
+    ${p.notes ? `<div class="detail-notes">${escHtml(p.notes)}</div>` : ''}
+    <div class="detail-actions">
+      <button class="btn-edit" onclick="editFromDetail('${p.id}')">Edit Pack</button>
+      <button class="btn-delete" onclick="deletePack('${p.id}')">Delete</button>
+    </div>
+  `;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function editFromDetail(id) {
+  closeDetailModal();
+  setTimeout(() => openEditModal(id), 180);
+}
+
+function closeDetailModal() {
+  document.getElementById('detail-overlay').classList.remove('open');
+}
+
+function deletePack(id) {
+  if (!confirm('Remove this pack from your collection?')) return;
+  collection = collection.filter(x => x.id !== id);
+  saveData();
+  renderGrid();
+  closeDetailModal();
+  showToast('Pack removed');
+}
+
+// ── UTILS ──
+function overlayClick(e, id) {
+  if (e.target.id === id) {
+    if (id === 'form-overlay') closeFormModal();
+    else closeDetailModal();
+  }
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── INIT ──
+loadData();
+renderGrid();
+updateStats();
+</script>
+</body>
+</html>
