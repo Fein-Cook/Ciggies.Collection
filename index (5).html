@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ec;--surface:#faf9f6;--card:#fff;
+  --border:rgba(0,0,0,0.07);--border-strong:rgba(0,0,0,0.14);
+  --text:#1a1814;--text-muted:#7a7568;--text-faint:#b0aa9e;
+  --accent:#c8472a;--accent-light:#f9ede9;
+  --star:#d4a017;--gold:#c9a227;
+  --green:#2a7a4a;--green-light:#e8f5ee;
+  --blue:#2a5a8c;--blue-light:#e8f0f8;
+  --red-light:#fdf0ed;
+  --radius:12px;--radius-sm:8px;
+  --hdr:56px;
+  --shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+[data-theme="dark"]{
+  --bg:#141210;--surface:#1c1916;--card:#252119;
+  --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.13);
+  --text:#f0ece4;--text-muted:#9a9080;--text-faint:#5a5448;
+  --accent:#e05030;--accent-light:#2a1a14;
+  --green-light:#0d2018;--blue-light:#0d1a28;--red-light:#2a1210;
+  --shadow:0 4px 20px rgba(0,0,0,0.35);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s}
+
+/* HEADER */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.25rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:var(--hdr);gap:8px}
+.logo{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:20px;height:20px}
+nav{display:flex;gap:2px}
+.nav-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;color:var(--text-muted);padding:5px 10px;border-radius:6px;transition:all .15s;white-space:nowrap}
+.nav-btn:hover,.nav-btn.active{background:var(--bg);color:var(--text)}
+.hdr-right{display:flex;align-items:center;gap:6px}
+.icon-btn{background:none;border:1px solid var(--border-strong);cursor:pointer;width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;color:var(--text-muted);position:relative}
+.icon-btn:hover{background:var(--bg)}
+.add-btn{background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;padding:6px 14px;border-radius:6px;white-space:nowrap;transition:opacity .15s}
+.add-btn:hover{opacity:.88}
+
+/* SETTINGS DROPDOWN */
+.settings-wrap{position:relative}
+.settings-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--card);border:1px solid var(--border-strong);border-radius:var(--radius-sm);width:280px;box-shadow:var(--shadow);z-index:300;padding:12px;display:none}
+.settings-dropdown.open{display:block}
+.settings-section{margin-bottom:12px}
+.settings-section:last-child{margin-bottom:0}
+.settings-label{font-size:0.68rem;font-weight:500;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.settings-row:last-child{margin-bottom:0}
+.settings-row label{font-size:0.82rem;color:var(--text-muted);cursor:pointer}
+.toggle-switch{position:relative;width:34px;height:20px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-track{position:absolute;inset:0;background:var(--border-strong);border-radius:10px;cursor:pointer;transition:background .2s}
+.toggle-switch input:checked+.toggle-track{background:var(--accent)}
+.toggle-track:before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle-switch input:checked+.toggle-track:before{transform:translateX(14px)}
+.settings-divider{height:1px;background:var(--border);margin:10px 0}
+.sync-input-sm{width:100%;font-family:'DM Mono',monospace;font-size:0.75rem;padding:6px 9px;background:var(--bg);border:1px solid var(--border-strong);border-radius:6px;color:var(--text);outline:none;margin-bottom:6px;transition:border-color .15s}
+.sync-input-sm:focus{border-color:var(--accent)}
+.sync-btn-row{display:flex;gap:6px}
+.sync-btn-sm{flex:1;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;padding:6px 10px;border-radius:6px;cursor:pointer;border:none;transition:opacity .15s}
+.sync-btn-push{background:var(--accent);color:#fff}
+.sync-btn-pull{background:var(--text);color:var(--bg)}
+.sync-btn-sm:hover{opacity:.82}
+.sync-status-sm{font-size:0.7rem;color:var(--text-faint);margin-top:5px;min-height:14px}
+
+/* HERO */
+.hero{padding:1.75rem 1.25rem 1rem;max-width:1200px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:1.25rem;flex-wrap:wrap}
+.hero-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;line-height:1.1;letter-spacing:-.03em}
+.stats-row{display:flex;gap:1.1rem;align-items:flex-end}
+.stat{text-align:right}
+.stat-num{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;line-height:1}
+.stat-label{font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.stat-divider{width:1px;height:32px;background:var(--border-strong);opacity:.5}
+
+/* FILTER BAR */
+.filter-bar{max-width:1200px;margin:0 auto;padding:0 1.25rem 1.1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dd-wrap{position:relative}
+.dd-btn{background:var(--card);border:1px solid var(--border-strong);font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--text-muted);padding:5px 28px 5px 10px;border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap;position:relative;outline:none}
+.dd-btn::after{content:'▾';position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-faint)}
+.dd-btn:hover,.dd-btn.active-filter{border-color:var(--accent);color:var(--accent)}
+.dd-menu{position:absolute;top:calc(100% + 4px);left:0;background:var(--card);border:1px solid var(--border-strong);border-radius:var(--radius-sm);min-width:140px;box-shadow:var(--shadow);z-index:200;display:none;padding:4px}
+.dd-menu.open{display:block}
+.dd-item{font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text-muted);padding:6px 10px;border-radius:4px;cursor:pointer;transition:background .1s;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dd-item:hover{background:var(--bg);color:var(--text)}
+.dd-item.selected{color:var(--accent);font-weight:500}
+.dd-item.selected::after{content:'✓';font-size:11px}
+.search-wrap{margin-left:auto;position:relative}
+.search-input{font-family:'DM Sans',sans-serif;font-size:0.82rem;background:var(--card);border:1px solid var(--border-strong);border-radius:20px;padding:6px 14px 6px 30px;color:var(--text);width:160px;outline:none;transition:border-color .15s,width .2s}
+.search-input:focus{border-color:var(--accent);width:200px}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:13px;pointer-events:none}
+.view-toggle{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border-strong);border-radius:6px;padding:2px}
+.view-btn{background:none;border:none;cursor:pointer;padding:4px 7px;border-radius:4px;font-size:13px;color:var(--text-muted);transition:all .15s}
+.view-btn.active{background:var(--card);color:var(--text)}
+
+/* SECTION TABS */
+.section-tabs{max-width:1200px;margin:0 auto;padding:0 1.25rem .75rem;display:flex;gap:4px}
+.section-tab{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;color:var(--text-muted);padding:6px 14px;border-radius:20px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.section-tab:hover{color:var(--text)}
+.section-tab.active{background:var(--card);border-color:var(--border-strong);color:var(--text)}
+.section-tab .tab-count{font-family:'DM Mono',monospace;font-size:0.7rem;background:var(--bg);border-radius:10px;padding:1px 6px;margin-left:5px;color:var(--text-faint)}
+.section-tab.active .tab-count{background:var(--accent-light);color:var(--accent)}
+
+/* GRID */
+.grid-wrap{max-width:1200px;margin:0 auto;padding:0 1.25rem 4rem}
+#collection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:13px}
+#collection-grid.list-view{grid-template-columns:1fr}
+
+.pack-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative}
+.pack-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--border-strong)}
+.pack-img-wrap{width:100%;aspect-ratio:3/4;background:var(--bg);overflow:hidden;position:relative}
+.pack-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.pack-card:hover .pack-img-wrap img{transform:scale(1.04)}
+.pack-no-img{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--text-faint)}
+.pack-no-img-icon{font-size:2rem}
+.pack-no-img-label{font-size:0.7rem}
+.pack-badge{position:absolute;top:7px;right:7px;background:rgba(255,255,255,0.92);border:1px solid var(--border);border-radius:20px;font-size:0.65rem;font-weight:500;padding:2px 7px;color:var(--text-muted);backdrop-filter:blur(4px)}
+[data-theme="dark"] .pack-badge{background:rgba(0,0,0,0.6)}
+/* wishlist indicator */
+.wish-ribbon{position:absolute;top:0;left:0;background:var(--blue);color:#fff;font-size:0.58rem;font-weight:600;padding:3px 8px 3px 6px;border-radius:0 0 8px 0;letter-spacing:.04em;text-transform:uppercase}
+.pack-info{padding:9px 11px 11px;border-top:1px solid var(--border)}
+.pack-brand{font-size:0.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:1px}
+.pack-name{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:500;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pack-variant{font-size:0.7rem;color:var(--text-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pack-meta{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.pack-score{font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:500;color:var(--text-muted);background:var(--bg);border-radius:4px;padding:1px 5px}
+.pack-score.score-exc{color:#fff;background:#b8860b}
+.pack-score.score-out{color:#fff;background:var(--green)}
+.pack-country{font-size:0.68rem;color:var(--text-faint);font-family:'DM Mono',monospace}
+.strength-dots{display:flex;gap:2px;align-items:center}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--border-strong)}
+.sdot.lit{background:var(--accent)}
+
+/* list view */
+#collection-grid.list-view .pack-card{display:grid;grid-template-columns:60px 1fr}
+#collection-grid.list-view .pack-img-wrap{aspect-ratio:1;height:60px;width:60px;border-radius:0}
+#collection-grid.list-view .pack-info{padding:8px 12px;border-top:none;border-left:1px solid var(--border);display:flex;flex-direction:column;justify-content:center}
+
+.empty-state{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--text-muted)}
+.empty-icon{font-size:2.5rem;margin-bottom:10px}
+.empty-title{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:5px;color:var(--text)}
+.empty-sub{font-size:0.8rem}
+
+/* WISHLIST SECTION */
+.wishlist-header{max-width:1200px;margin:0 auto;padding:0 1.25rem 0.75rem;display:flex;align-items:center;gap:12px}
+.wishlist-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--text)}
+.wishlist-divider{flex:1;height:1px;background:var(--border)}
+.wishlist-count{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text-faint)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,8,5,0.65);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .2s}
+@media(min-width:600px){.modal-overlay{align-items:center;padding:1rem}}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--card);width:100%;max-width:540px;max-height:92vh;overflow-y:auto;transform:translateY(24px);transition:transform .22s;border-radius:16px 16px 0 0}
+@media(min-width:600px){.modal{border-radius:16px;transform:translateY(16px);max-height:90vh}}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:var(--border-strong);border-radius:2px;margin:10px auto 0;display:block}
+@media(min-width:600px){.modal-handle{display:none}}
+.modal-header{padding:1rem 1.4rem .85rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:10}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700}
+.modal-close{background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-muted);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:background .15s}
+.modal-close:hover{background:var(--bg)}
+.modal-body{padding:1rem 1.4rem 1.4rem}
+
+/* FORM */
+.form-row{margin-bottom:.85rem}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.85rem}
+@media(max-width:400px){.form-row-2{grid-template-columns:1fr}}
+label{display:block;font-size:0.7rem;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+input[type=text],input[type=number],select,textarea{width:100%;font-family:'DM Sans',sans-serif;font-size:0.88rem;background:var(--bg);color:var(--text);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 11px;outline:none;transition:border-color .15s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:68px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+
+/* AI BAR */
+.ai-bar{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:.85rem}
+.ai-bar-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ai-badge{background:var(--accent);color:#fff;font-size:0.58rem;font-weight:600;letter-spacing:.06em;padding:2px 5px;border-radius:3px}
+.ai-bar-label{font-size:0.72rem;color:var(--text-muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.ai-row{display:flex;gap:7px}
+.ai-input{flex:1;font-size:0.85rem}
+.ai-btn{background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;padding:8px 13px;border-radius:6px;white-space:nowrap;transition:opacity .15s;display:flex;align-items:center;gap:5px;flex-shrink:0}
+.ai-btn:hover{opacity:.88}
+.ai-btn:disabled{opacity:.4;cursor:not-allowed}
+.ai-status{font-size:0.72rem;color:var(--text-faint);margin-top:6px;min-height:14px}
+.spin{display:inline-block;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* AUTOCOMPLETE */
+.autocomplete-wrap{position:relative}
+.ac-list{position:absolute;top:calc(100% + 3px);left:0;right:0;background:var(--card);border:1px solid var(--border-strong);border-radius:var(--radius-sm);z-index:300;max-height:180px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:none}
+.ac-list.open{display:block}
+.ac-item{padding:7px 11px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);transition:background .1s}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover,.ac-item.focused{background:var(--accent-light)}
+.ac-item-name{font-weight:500}
+.ac-item-country{font-size:0.68rem;color:var(--text-faint);font-family:'DM Mono',monospace}
+
+/* SCORE SECTION */
+.score-section{background:var(--bg);border-radius:var(--radius-sm);padding:12px;margin-bottom:.85rem;border:1px solid var(--border)}
+.score-section-title{font-size:0.7rem;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.score-total{font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500}
+.score-total-label{font-size:0.68rem;color:var(--text-faint)}
+.score-category{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;margin-bottom:8px}
+.score-category:last-child{margin-bottom:0}
+.score-cat-name{font-size:0.76rem;color:var(--text-muted)}
+.score-cat-name span{font-size:0.63rem;color:var(--text-faint);display:block;margin-top:1px}
+.score-slider-wrap{display:flex;align-items:center;gap:7px}
+.score-slider{width:100px;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border-strong);outline:none;cursor:pointer}
+.score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--card);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.score-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--card)}
+.score-val{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:500;min-width:26px;text-align:right}
+
+/* STRENGTH */
+.strength-picker{display:flex;gap:6px;margin-top:4px}
+.strength-dot-btn{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);background:none;cursor:pointer;transition:all .15s}
+.strength-dot-btn.lit{background:var(--accent);border-color:var(--accent)}
+
+/* WISHLIST TOGGLE IN FORM */
+.wishlist-toggle-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:.85rem;cursor:pointer}
+.wishlist-toggle-label{font-size:0.82rem;color:var(--text-muted)}
+.wishlist-toggle-label strong{color:var(--blue);font-weight:500}
+
+/* PHOTO */
+.img-upload{border:2px dashed var(--border-strong);border-radius:var(--radius-sm);padding:1.1rem;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
+.img-upload:hover{border-color:var(--accent);background:var(--accent-light)}
+.img-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.img-upload-icon{font-size:1.5rem;margin-bottom:5px}
+.img-upload-label{font-size:0.76rem;color:var(--text-muted)}
+.img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius-sm);margin-top:8px;display:none}
+.img-preview.show{display:block}
+
+.form-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:.85rem;border-top:1px solid var(--border);margin-top:.85rem}
+.btn-cancel{background:none;border:1px solid var(--border-strong);font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--text-muted);padding:8px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s}
+.btn-cancel:hover{border-color:var(--text-muted);color:var(--text)}
+.btn-save{background:var(--accent);border:none;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;color:#fff;padding:8px 18px;border-radius:var(--radius-sm);cursor:pointer;transition:opacity .15s}
+.btn-save:hover{opacity:.88}
+
+/* DETAIL */
+.detail-img{width:100%;max-height:260px;object-fit:contain;background:var(--bg);border-radius:var(--radius-sm)}
+.detail-img-placeholder{width:100%;height:160px;background:var(--bg);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--text-faint)}
+.detail-brand{font-size:0.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-top:12px;margin-bottom:1px}
+.detail-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;line-height:1.15;margin-bottom:3px}
+.detail-variant{color:var(--text-muted);font-size:0.88rem}
+.detail-wish-badge{display:inline-block;font-size:0.72rem;padding:3px 10px;border-radius:20px;margin-top:6px;font-weight:500;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+.detail-field{background:var(--bg);border-radius:var(--radius-sm);padding:7px 10px}
+.detail-field-label{font-size:0.63rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.detail-field-val{font-size:0.85rem;font-weight:500}
+.detail-notes{margin-top:10px;padding:9px 11px;background:var(--bg);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--text-muted);line-height:1.5}
+.score-breakdown{margin-top:10px;background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px}
+.score-breakdown-title{font-size:0.63rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.score-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.score-bar-row:last-child{margin-bottom:0}
+.score-bar-label{font-size:0.72rem;color:var(--text-muted);width:96px;flex-shrink:0}
+.score-bar-track{flex:1;height:5px;background:var(--border-strong);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s}
+.score-bar-val{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text-muted);width:24px;text-align:right;flex-shrink:0}
+.big-score{display:flex;align-items:baseline;gap:4px;margin-top:8px}
+.big-score-num{font-family:'DM Mono',monospace;font-size:2rem;font-weight:500;line-height:1}
+.big-score-denom{font-size:0.9rem;color:var(--text-faint)}
+.detail-actions{display:flex;gap:7px;margin-top:12px}
+.btn-edit{flex:1;background:var(--text);border:none;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;color:#fff;padding:9px;border-radius:var(--radius-sm);cursor:pointer;transition:opacity .15s}
+[data-theme="dark"] .btn-edit{background:var(--border-strong)}
+.btn-edit:hover{opacity:.82}
+.btn-delete{background:none;border:1px solid rgba(200,71,42,.3);font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--accent);padding:9px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s}
+.btn-delete:hover{background:var(--accent-light)}
+
+/* RANKINGS */
+#rankings-panel{display:none}
+#rankings-panel.active{display:block}
+#collection-panel.hidden{display:none}
+.rankings-wrap{max-width:700px;margin:0 auto;padding:0 1.25rem 4rem}
+.ranking-item{display:flex;align-items:center;gap:13px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s}
+.ranking-item:hover{opacity:.75}
+.rank-num{font-family:'DM Mono',monospace;font-size:.9rem;font-weight:500;color:var(--text-faint);width:24px;flex-shrink:0;text-align:right}
+.rank-num.gold{color:var(--gold)}
+.rank-img{width:42px;height:56px;border-radius:5px;object-fit:cover;background:var(--bg);flex-shrink:0}
+.rank-img-placeholder{width:42px;height:56px;border-radius:5px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;color:var(--text-faint)}
+.rank-info{flex:1;min-width:0}
+.rank-brand{font-size:0.63rem;color:var(--accent);text-transform:uppercase;letter-spacing:.07em;font-weight:500}
+.rank-name{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:500}
+.rank-variant{font-size:0.74rem;color:var(--text-muted)}
+.rank-meta{display:flex;align-items:center;gap:7px;margin-top:2px}
+.rank-score-big{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;flex-shrink:0;background:var(--bg);border-radius:6px;padding:3px 8px;color:var(--text)}
+.empty-rankings{text-align:center;padding:4rem 0;color:var(--text-muted)}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom)+1.25rem);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-size:0.78rem;padding:7px 14px;border-radius:20px;opacity:0;transition:all .25s;pointer-events:none;z-index:500;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:500px){
+  .hero-title{font-size:1.55rem}
+  .stats-row{gap:.8rem}
+  .stat-num{font-size:1.25rem}
+  #collection-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .search-input{width:130px}
+  .search-input:focus{width:160px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <!-- cartoon smoking cigarette SVG -->
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- cigarette body -->
+        <rect x="2" y="13" width="14" height="4" rx="2" fill="white"/>
+        <!-- filter tip orange -->
+        <rect x="14" y="13" width="4" height="4" rx="1" fill="#f0a060"/>
+        <!-- lit end glow -->
+        <circle cx="19.5" cy="15" r="1.5" fill="#ffcc44"/>
+        <!-- smoke puffs -->
+        <path d="M19 11 Q20 9 19 7" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.8"/>
+        <path d="M21 10 Q22.5 8 21 6" stroke="white" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6"/>
+      </svg>
+    </div>
+    The Archive
+  </div>
+  <nav>
+    <button class="nav-btn active" id="tab-collection" onclick="switchTab('collection')">Collection</button>
+    <button class="nav-btn" id="tab-rankings" onclick="switchTab('rankings')">Rankings</button>
+  </nav>
+  <div class="hdr-right">
+    <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Dark mode">🌙</button>
+    <div class="settings-wrap">
+      <button class="icon-btn" onclick="toggleSettings(event)" id="settings-btn" title="Settings">⚙</button>
+      <div class="settings-dropdown" id="settings-dropdown">
+        <div class="settings-section">
+          <div class="settings-label">Appearance</div>
+          <div class="settings-row">
+            <label for="tog-dark">Dark mode</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="tog-dark" onchange="toggleThemeCheck(this)">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-section">
+          <div class="settings-label">GitHub Sync</div>
+          <input class="sync-input-sm" type="password" id="gh-token" placeholder="GitHub token (ghp_…)" autocomplete="off">
+          <input class="sync-input-sm" type="text" id="gh-repo" placeholder="username/repo-name">
+          <div class="sync-btn-row">
+            <button class="sync-btn-sm sync-btn-push" onclick="ghPush()">↑ Push</button>
+            <button class="sync-btn-sm sync-btn-pull" onclick="ghPull()">↓ Pull</button>
+          </div>
+          <div class="sync-status-sm" id="sync-status"></div>
+          <div style="font-size:0.65rem;color:var(--text-faint);margin-top:5px;line-height:1.4">Needs a repo with a <em>collection.json</em> file (can be empty). Token needs repo write scope.</div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-section">
+          <div class="settings-label">AI Auto-fill</div>
+          <input class="sync-input-sm" type="password" id="api-key-store" placeholder="Anthropic API key (sk-ant-…)" autocomplete="off">
+          <button class="sync-btn-sm sync-btn-push" style="width:100%" onclick="saveApiKey()">Save Key</button>
+          <div style="font-size:0.65rem;color:var(--text-faint);margin-top:5px;line-height:1.4">Stored locally. Get a key at console.anthropic.com</div>
+        </div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="openAddModal()">+ Add</button>
+  </div>
+</header>
+
+<!-- COLLECTION PANEL -->
+<div id="collection-panel">
+  <div class="hero">
+    <div>
+      <div class="hero-title">The Archive</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Packs</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-num" id="stat-brands">0</div><div class="stat-label">Brands</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-num" id="stat-avg">—</div><div class="stat-label">Avg /100</div></div>
+    </div>
+  </div>
+
+  <!-- SECTION TABS: Collection / Wishlist -->
+  <div class="section-tabs">
+    <button class="section-tab active" id="sec-collection" onclick="setSection('collection')">
+      Collection <span class="tab-count" id="count-collection">0</span>
+    </button>
+    <button class="section-tab" id="sec-wishlist" onclick="setSection('wishlist')">
+      Wishlist <span class="tab-count" id="count-wishlist">0</span>
+    </button>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <!-- Sort dropdown -->
+    <div class="dd-wrap" id="sort-wrap">
+      <button class="dd-btn" id="sort-btn" onclick="toggleDD('sort-dd')">Sort: Newest</button>
+      <div class="dd-menu" id="sort-dd">
+        <div class="dd-item selected" onclick="setSort(this,'newest')">Newest</div>
+        <div class="dd-item" onclick="setSort(this,'score')">Top Scored</div>
+        <div class="dd-item" onclick="setSort(this,'name')">A – Z</div>
+        <div class="dd-item" onclick="setSort(this,'brand')">By Brand</div>
+      </div>
+    </div>
+    <!-- Format filter dropdown -->
+    <div class="dd-wrap" id="fmt-wrap">
+      <button class="dd-btn" id="fmt-btn" onclick="toggleDD('fmt-dd')">Format: All</button>
+      <div class="dd-menu" id="fmt-dd">
+        <div class="dd-item selected" onclick="setFmt(this,'')">All Formats</div>
+        <div class="dd-item" onclick="setFmt(this,'King Size')">King Size</div>
+        <div class="dd-item" onclick="setFmt(this,'Regular')">Regular</div>
+        <div class="dd-item" onclick="setFmt(this,'Slim')">Slim</div>
+        <div class="dd-item" onclick="setFmt(this,'Super Slim')">Super Slim</div>
+        <div class="dd-item" onclick="setFmt(this,'100s')">100s</div>
+        <div class="dd-item" onclick="setFmt(this,'Cigarillo')">Cigarillo</div>
+        <div class="dd-item" onclick="setFmt(this,'RYO')">RYO</div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" placeholder="Search…" id="search-input" oninput="renderGrid()">
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vbtn-grid" onclick="setView('grid')">⊞</button>
+      <button class="view-btn" id="vbtn-list" onclick="setView('list')">☰</button>
+    </div>
+  </div>
+
+  <div class="grid-wrap"><div id="collection-grid"></div></div>
+</div>
+
+<!-- RANKINGS PANEL -->
+<div id="rankings-panel">
+  <div class="hero">
+    <div><div class="hero-title">Rankings</div></div>
+  </div>
+  <div class="rankings-wrap"><div id="rankings-list"></div></div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <div class="modal-header">
+      <div class="modal-title" id="form-modal-title">Add New Pack</div>
+      <button class="modal-close" onclick="closeFormModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <!-- AI AUTOFILL -->
+      <div class="ai-bar">
+        <div class="ai-bar-top">
+          <span class="ai-bar-label">Smart Lookup</span>
+          <span class="ai-badge">AI</span>
+        </div>
+        <div class="ai-row">
+          <input class="ai-input" type="text" id="ai-query" placeholder="e.g. Marlboro Gold King Size…" onkeydown="if(event.key==='Enter')aiLookup()">
+          <button class="ai-btn" id="ai-btn" onclick="aiLookup()">Auto-fill</button>
+        </div>
+        <div class="ai-status"><span id="ai-status-text">Type brand + name, hit Auto-fill</span></div>
+      </div>
+
+      <!-- PHOTO -->
+      <div class="form-row">
+        <label>Pack Photo</label>
+        <div class="img-upload">
+          <input type="file" accept="image/*" id="img-file-input" onchange="handleImgUpload(event)">
+          <div class="img-upload-icon">📷</div>
+          <div class="img-upload-label">Tap to upload</div>
+        </div>
+        <img class="img-preview" id="img-preview" src="" alt="">
+      </div>
+
+      <!-- BRAND + NAME -->
+      <div class="form-row-2">
+        <div>
+          <label>Brand *</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="f-brand" placeholder="e.g. Marlboro" oninput="onBrandInput()" onkeydown="onBrandKey(event)" autocomplete="off">
+            <div class="ac-list" id="brand-ac"></div>
+          </div>
+        </div>
+        <div>
+          <label>Name *</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="f-name" placeholder="e.g. Gold" oninput="onNameInput()" onkeydown="onNameKey(event)" onfocus="onNameFocus()" autocomplete="off">
+            <div class="ac-list" id="name-ac"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div><label>Edition / Sub-variant</label><input type="text" id="f-variant" placeholder="e.g. Crush 2024"></div>
+        <div><label>Country Version</label><input type="text" id="f-country" placeholder="e.g. Australia"></div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label>Format</label>
+          <select id="f-format">
+            <option value="">— Select —</option>
+            <option>King Size</option><option>Regular</option><option>Slim</option>
+            <option>Super Slim</option><option>100s</option><option>Cigarillo</option>
+            <option>Cigar</option><option>RYO</option><option>Other</option>
+          </select>
+        </div>
+        <div><label>Acquired</label><input type="text" id="f-acquired" placeholder="e.g. Jan 2024, Bali"></div>
+      </div>
+      <div class="form-row-2">
+        <div><label>Tar (mg)</label><input type="number" id="f-tar" placeholder="e.g. 10" min="0" max="30"></div>
+        <div><label>Nicotine (mg)</label><input type="number" id="f-nic" placeholder="e.g. 0.8" min="0" max="5" step="0.1"></div>
+      </div>
+
+      <!-- WISHLIST TOGGLE -->
+      <div class="wishlist-toggle-row" onclick="toggleWishlist()" id="wishlist-toggle-row">
+        <span class="wishlist-toggle-label" id="wishlist-toggle-label">Add to <strong>Collection</strong></span>
+        <span id="wishlist-toggle-icon" style="font-size:1.1rem">📦</span>
+      </div>
+
+      <!-- STRENGTH -->
+      <div class="form-row">
+        <label>Strength</label>
+        <div class="strength-picker" id="strength-picker">
+          <button class="strength-dot-btn" data-v="1" onclick="setStrength(1)" title="Very Light"></button>
+          <button class="strength-dot-btn" data-v="2" onclick="setStrength(2)" title="Light"></button>
+          <button class="strength-dot-btn" data-v="3" onclick="setStrength(3)" title="Medium"></button>
+          <button class="strength-dot-btn" data-v="4" onclick="setStrength(4)" title="Strong"></button>
+          <button class="strength-dot-btn" data-v="5" onclick="setStrength(5)" title="Very Strong"></button>
+        </div>
+      </div>
+
+      <!-- SCORE -->
+      <div class="score-section">
+        <div class="score-section-title">
+          <span>Rating (5 × 20 pts)</span>
+          <span><span class="score-total" id="form-score-total">0</span><span class="score-total-label">/100</span></span>
+        </div>
+        <div class="score-category">
+          <div class="score-cat-name">Collectability<span>Rarity, exclusivity</span></div>
+          <div class="score-slider-wrap"><input class="score-slider" type="range" min="0" max="20" value="0" id="s-collect" oninput="updateScoreTotal()"><span class="score-val" id="sv-collect">0</span></div>
+        </div>
+        <div class="score-category">
+          <div class="score-cat-name">Ash Stability<span>Firmness, burn</span></div>
+          <div class="score-slider-wrap"><input class="score-slider" type="range" min="0" max="20" value="0" id="s-ash" oninput="updateScoreTotal()"><span class="score-val" id="sv-ash">0</span></div>
+        </div>
+        <div class="score-category">
+          <div class="score-cat-name">Pack Design<span>Aesthetics</span></div>
+          <div class="score-slider-wrap"><input class="score-slider" type="range" min="0" max="20" value="0" id="s-design" oninput="updateScoreTotal()"><span class="score-val" id="sv-design">0</span></div>
+        </div>
+        <div class="score-category">
+          <div class="score-cat-name">Smoothness<span>Less bitter = higher</span></div>
+          <div class="score-slider-wrap"><input class="score-slider" type="range" min="0" max="20" value="0" id="s-bitter" oninput="updateScoreTotal()"><span class="score-val" id="sv-bitter">0</span></div>
+        </div>
+        <div class="score-category">
+          <div class="score-cat-name">Aftertaste<span>Clean finish</span></div>
+          <div class="score-slider-wrap"><input class="score-slider" type="range" min="0" max="20" value="0" id="s-after" oninput="updateScoreTotal()"><span class="score-val" id="sv-after">0</span></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Notes</label>
+        <textarea id="f-notes" placeholder="Tasting notes, packaging thoughts, where you found it…"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeFormModal()">Cancel</button>
+        <button class="btn-save" onclick="savePack()">Save Pack</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <div class="modal-header">
+      <div class="modal-title">Pack Details</div>
+      <button class="modal-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── BRAND DATABASE ───────────────────────────────────────────────────────
+const BRAND_DB=[
+  {name:"Marlboro",country:"USA",variants:["Red","Gold","Silver","Blue","Ice Blast","Black","Menthol","Filter Plus","Advance","Edge","Double Fusion"]},
+  {name:"Camel",country:"USA",variants:["Blue","Filters","Lights","Turkish Gold","Turkish Silver","Turkish Royal","Wides","Menthol","Crush","Activated"]},
+  {name:"Lucky Strike",country:"USA",variants:["Original Red","Blue","Menthol","Lights","Click & Roll","Double Click","Strike Forward"]},
+  {name:"Winston",country:"USA",variants:["Red","Blue","White","Gold","Classic","Super Lights","XStyle"]},
+  {name:"Newport",country:"USA",variants:["Menthol","Box","Non-Menthol","Bold","Platinum"]},
+  {name:"Pall Mall",country:"USA",variants:["Red","Blue","Black","White","Menthol","Orange","Flow"]},
+  {name:"American Spirit",country:"USA",variants:["Yellow","Blue","Orange","Turquoise","Black","Perique Blend","Sky Blue"]},
+  {name:"Parliament",country:"USA",variants:["Lights","Full Flavor","Aqua","Platinum","Night Blue"]},
+  {name:"L&M",country:"USA",variants:["Red Label","Blue Label","Box","Loft","Forward"]},
+  {name:"Philip Morris",country:"USA",variants:["Classic","Superlight"]},
+  {name:"Nat Sherman",country:"USA",variants:["Original","Naturals","MCD","Timeless"]},
+  {name:"Dunhill",country:"UK",variants:["Red","Blue","Menthol","Switch","Fine Cut","International","Master Blend"]},
+  {name:"Rothmans",country:"UK",variants:["Blue","Gold","Royals","International","Special"]},
+  {name:"Benson & Hedges",country:"UK",variants:["Gold","Silver","Blue","100s","Menthol","Dual"]},
+  {name:"Silk Cut",country:"UK",variants:["Purple","Silver","Blue","Ultra","White"]},
+  {name:"Sobranie",country:"UK",variants:["Cocktail","Black Russian","White Russian","Multicolor","Gold"]},
+  {name:"Treasurer",country:"UK",variants:["Gold","Platinum","Silver","Cigarello"]},
+  {name:"Players",country:"UK",variants:["Navy Cut","Gold","Medium"]},
+  {name:"Vogue",country:"France",variants:["Blue","Menthe","Bleue","Or","Primrose","Lilas"]},
+  {name:"Gitanes",country:"France",variants:["Brunes","Blondes","Mais","Legendes"]},
+  {name:"Gauloises",country:"France",variants:["Blondes","Brunes","Caporal","Red","Blue","Menthol"]},
+  {name:"Davidoff",country:"Switzerland",variants:["Classic","Gold","Magnum","Slims","Reach","White"]},
+  {name:"West",country:"Germany",variants:["Red","Blue","Silver","White","Full","Menthol"]},
+  {name:"HB",country:"Germany",variants:["Extra","Blue","Filter","Classic"]},
+  {name:"Pueblo",country:"Germany",variants:["Blue","Green","Classic Blue","Red"]},
+  {name:"Peter Stuyvesant",country:"Netherlands",variants:["International","Blue","Navy Cut","Click","One"]},
+  {name:"Winfield",country:"Australia",variants:["Red","Blue","Gold","Sky Blue","Menthol 25s","Green"]},
+  {name:"Holiday",country:"Australia",variants:["Red","Blue","White","Menthol","Purple"]},
+  {name:"Longbeach",country:"Australia",variants:["Red","Blue","White","Menthol","Gold"]},
+  {name:"Peter Jackson",country:"Australia",variants:["Blue","Purple","Teal","Burgundy","Platinum"]},
+  {name:"Horizon",country:"Australia",variants:["Red","Blue","White","Menthol","Gold"]},
+  {name:"Escort",country:"Australia",variants:["Red","Blue","Menthol","Filter","Gold"]},
+  {name:"Brandon",country:"Australia",variants:["Red","Blue","White","Menthol"]},
+  {name:"Cabinet",country:"Australia",variants:["Sky Blue","Navy Blue"]},
+  {name:"Choice",country:"Australia",variants:["Red","Blue","White","Menthol"]},
+  {name:"Mild Seven",country:"Japan",variants:["Regular","Lights","Super Lights","Extra Lights","One","Menthol"]},
+  {name:"Seven Stars",country:"Japan",variants:["Regular","Menthol","Lights","Fine Cut"]},
+  {name:"Mevius",country:"Japan",variants:["Original","Option","Light Option","One","Menthol Option","E-Series"]},
+  {name:"Peace",country:"Japan",variants:["Soft Pack","Box","Non-Filter"]},
+  {name:"Lark",country:"Japan",variants:["Regular","Milder","Extra Milder","Click Menthol"]},
+  {name:"Esse",country:"South Korea",variants:["Change","Ice Rush","Gold","Super Slim","One","Mild","Lemon Ice"]},
+  {name:"Raison",country:"South Korea",variants:["Original","Violet","White","Ice"]},
+  {name:"Bohem",country:"South Korea",variants:["Cigar Mojito","Ice Bourbon","Mix","Citron"]},
+  {name:"Chunghwa",country:"China",variants:["Regular","Hard Box","Soft Box","Special"]},
+  {name:"Double Happiness",country:"China",variants:["Classic","Hard Box","Soft Box"]},
+  {name:"Panda",country:"China",variants:["Classic","Premium"]},
+  {name:"Gold Flake",country:"India",variants:["Kings","Premium Lights","Superstar","Special"]},
+  {name:"Sampoerna",country:"Indonesia",variants:["A Mild","U Mild","Hijau","Kretek","Avolution"]},
+  {name:"Gudang Garam",country:"Indonesia",variants:["International","Merah","Surya","Signature","Mild"]},
+  {name:"Djarum",country:"Indonesia",variants:["Black","Super","Coklat","Special","Menthol"]},
+  {name:"Hollywood",country:"Brazil",variants:["Box","Lights","Menthol","Blue"]},
+  {name:"Belmont",country:"Canada",variants:["Blue","Red","Special Mild","Menthol","Gold"]},
+  {name:"du Maurier",country:"Canada",variants:["Original","Distinct","Signature","Smooth"]},
+  {name:"Export A",country:"Canada",variants:["Green","Silver","Gold","Smooth","Lights"]},
+  {name:"Prince",country:"Denmark",variants:["Denmark","Regular","Gold","Fine","Classic"]},
+  {name:"Nobel",country:"Sweden",variants:["Classic","Light","Blue"]},
+  {name:"Sobieski",country:"Poland",variants:["Classic","Full","Red"]},
+  {name:"Ducados",country:"Spain",variants:["Rubio","Negro","Rubio Especial"]},
+  {name:"MS",country:"Italy",variants:["Rosse","Blu","Verdi"]},
+  {name:"GPC",country:"USA",variants:["Box","Lights","Menthol"]},
+  {name:"Basic",country:"USA",variants:["Box","Lights","Menthol","Ultra Lights"]},
+  {name:"Kent",country:"USA",variants:["Original","One","Convertibles","Infina"]},
+  {name:"Chesterfield",country:"USA",variants:["Red","Blue","Click & Roll"]},
+  {name:"Virginia Slims",country:"USA",variants:["Luxury Lights","Ultra Lights","Menthol","Superslims"]},
+  {name:"More",country:"USA",variants:["Brown","Menthol","120s"]},
+  {name:"Kool",country:"USA",variants:["Menthol","Box","Super Lights","XL"]},
+  {name:"Bond Street",country:"Germany",variants:["Silver","Blue","Premium"]},
+  {name:"Embassy",country:"UK",variants:["Red","Number One","Gold"]},
+  {name:"State Express 555",country:"UK",variants:["Gold","Regular","Lights"]},
+  {name:"Muratti",country:"UK",variants:["Ambassadors","Virginia","Slim"]},
+  {name:"Parisienne",country:"Switzerland",variants:["Blue","Red","Blonde"]},
+  {name:"Golden Bat",country:"Japan",variants:["Regular","Short"]},
+  {name:"Red Pagoda Mountain",country:"China",variants:["Soft","Hard","Classic"]},
+  {name:"Yuxi",country:"China",variants:["Classic","Premium","Gold"]},
+  {name:"Liqun",country:"China",variants:["Hard Box","Soft Box","Deluxe"]},
+  {name:"Classic",country:"India",variants:["Regular","Mild","Menthol","Ultra Mild"]},
+  {name:"Four Square",country:"India",variants:["Premium","Special","Regular"]},
+  {name:"LA Bold",country:"Indonesia",variants:["Menthol Ice","Classic","Bold"]},
+  {name:"Free",country:"Brazil",variants:["Red","Blue","Menthol"]},
+  {name:"Derby",country:"Brazil",variants:["Box","Menthol","Extra"]},
+  {name:"Bristol",country:"Brazil",variants:["Red","Blue","Menthol"]},
+  {name:"Bastos",country:"Belgium",variants:["Blauw","Rood","Filter"]},
+  {name:"Toscano",country:"Italy",variants:["Classico","Originale","Filtro","Antico"]},
+  {name:"Prima",country:"Russia",variants:["Classic","Red"]},
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+const STORE_KEY='cigcollection_v2';
+let collection=[],currentSort='newest',currentView='grid',currentSection='collection',currentFmt='';
+let currentImgDataUrl='',editingId=null,formStrength=0,formIsWishlist=false;
+let _variants=[];
+
+function loadData(){try{collection=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch(e){collection=[];}}
+function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(collection));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function totalScore(p){const s=p.scores||{};return(s.collect||0)+(s.ash||0)+(s.design||0)+(s.bitter||0)+(s.after||0);}
+function scoreClass(n){if(n>=95)return'Exceptional';if(n>=90)return'Outstanding';if(n>=85)return'Excellent';if(n>=80)return'Very Good';if(n>=70)return'Good';if(n>=60)return'Average';if(n>=50)return'Below Avg';return'Poor';}
+function scoreColor(n){if(n>=95)return'#b8860b';if(n>=90)return'#2a7a4a';if(n>=80)return'#2a5a8c';if(n>=60)return'#7a7568';return'#c8472a';}
+
+function updateScoreTotal(){
+  const ids=['collect','ash','design','bitter','after'];let t=0;
+  ids.forEach(k=>{const v=parseInt(document.getElementById('s-'+k).value);t+=v;document.getElementById('sv-'+k).textContent=v;});
+  document.getElementById('form-score-total').textContent=t;
+}
+
+// ─── THEME ────────────────────────────────────────────────────────────────
+function toggleTheme(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  applyTheme(!isDark);
+}
+function toggleThemeCheck(cb){applyTheme(cb.checked);}
+function applyTheme(dark){
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  document.getElementById('theme-btn').textContent=dark?'☀️':'🌙';
+  const cb=document.getElementById('tog-dark');if(cb)cb.checked=dark;
+  localStorage.setItem('cig_theme',dark?'dark':'light');
+}
+function initTheme(){
+  const t=localStorage.getItem('cig_theme')||'light';
+  applyTheme(t==='dark');
+}
+
+// ─── SETTINGS DROPDOWN ───────────────────────────────────────────────────
+function toggleSettings(e){
+  e.stopPropagation();
+  const dd=document.getElementById('settings-dropdown');
+  dd.classList.toggle('open');
+  // pre-fill saved values
+  const tok=localStorage.getItem('cig_ghtoken')||'';
+  const rep=localStorage.getItem('cig_ghrepo')||'';
+  if(tok)document.getElementById('gh-token').value=tok;
+  if(rep)document.getElementById('gh-repo').value=rep;
+  const ak=localStorage.getItem('cig_apikey')||'';
+  if(ak)document.getElementById('api-key-store').value=ak;
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.settings-wrap'))document.getElementById('settings-dropdown').classList.remove('open');
+  if(!e.target.closest('#f-brand')&&!e.target.closest('#brand-ac'))closeAc('brand-ac');
+  if(!e.target.closest('#f-name')&&!e.target.closest('#name-ac'))closeAc('name-ac');
+  // close dropdowns
+  ['sort-dd','fmt-dd'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&!e.target.closest('#'+id)&&!e.target.closest('[onclick*="'+id+'"]'))el.classList.remove('open');
+  });
+});
+function saveApiKey(){
+  const v=document.getElementById('api-key-store').value.trim();
+  if(!v){showToast('Enter a key first');return;}
+  localStorage.setItem('cig_apikey',v);
+  showToast('API key saved ✦');
+}
+
+// ─── DROPDOWN MENUS ──────────────────────────────────────────────────────
+function toggleDD(id){
+  ['sort-dd','fmt-dd'].forEach(d=>{if(d!==id)document.getElementById(d).classList.remove('open');});
+  document.getElementById(id).classList.toggle('open');
+}
+function setSort(el,sort){
+  currentSort=sort;
+  document.querySelectorAll('#sort-dd .dd-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('sort-btn').textContent='Sort: '+el.textContent;
+  document.getElementById('sort-dd').classList.remove('open');
+  renderGrid();
+}
+function setFmt(el,fmt){
+  currentFmt=fmt;
+  document.querySelectorAll('#fmt-dd .dd-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('fmt-btn').textContent=fmt?'Format: '+fmt:'Format: All';
+  const active=fmt!=='';
+  document.getElementById('fmt-btn').classList.toggle('active-filter',active);
+  document.getElementById('fmt-dd').classList.remove('open');
+  renderGrid();
+}
+
+// ─── SECTION TABS ────────────────────────────────────────────────────────
+function setSection(s){
+  currentSection=s;
+  document.getElementById('sec-collection').classList.toggle('active',s==='collection');
+  document.getElementById('sec-wishlist').classList.toggle('active',s==='wishlist');
+  renderGrid();
+}
+
+// ─── AI AUTOFILL ─────────────────────────────────────────────────────────
+async function aiLookup(){
+  const q=document.getElementById('ai-query').value.trim();
+  if(!q){setAiStatus('Type a brand and name first');return;}
+  const apiKey=localStorage.getItem('cig_apikey')||'';
+  if(!apiKey){setAiStatus('Add API key in Settings ⚙ first');return;}
+  const btn=document.getElementById('ai-btn');
+  btn.innerHTML='<span class="spin">↻</span>';btn.disabled=true;
+  setAiStatus('Looking up…');
+  const prompt=`You are a cigarette encyclopedia. For the pack "${q}", return ONLY a compact JSON object:
+{"brand":"","name":"","variant":"","country":"","format":"King Size|Regular|Slim|Super Slim|100s|Cigarillo|Cigar|RYO|Other","tar":null,"nicotine":null,"strength":0,"notes":"2 sentences"}
+No markdown, no explanation.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await res.json();
+    if(data.error){setAiStatus('API error: '+data.error.message);return;}
+    const text=data.content?.map(c=>c.text||'').join('')||'';
+    const p=JSON.parse(text.replace(/```json|```/g,'').trim());
+    if(p.brand)document.getElementById('f-brand').value=p.brand;
+    if(p.name)document.getElementById('f-name').value=p.name;
+    if(p.variant!==undefined)document.getElementById('f-variant').value=p.variant||'';
+    if(p.country)document.getElementById('f-country').value=p.country;
+    if(p.format){const s=document.getElementById('f-format');for(let o of s.options)if(o.value===p.format){s.value=p.format;break;}}
+    if(p.tar)document.getElementById('f-tar').value=p.tar;
+    if(p.nicotine)document.getElementById('f-nic').value=p.nicotine;
+    if(p.strength!=null)setStrength(Math.min(5,Math.max(0,parseInt(p.strength)||0)));
+    if(p.notes)document.getElementById('f-notes').value=p.notes;
+    _variants=(BRAND_DB.find(b=>b.name.toLowerCase()===(p.brand||'').toLowerCase())||{}).variants||[];
+    setAiStatus('✓ Done — edit as needed');showToast('Auto-filled');
+  }catch(e){setAiStatus('Could not load — fill manually');}
+  finally{btn.innerHTML='Auto-fill';btn.disabled=false;}
+}
+function setAiStatus(msg){document.getElementById('ai-status-text').textContent=msg;}
+
+// ─── AUTOCOMPLETE ─────────────────────────────────────────────────────────
+function onBrandInput(){
+  const q=document.getElementById('f-brand').value.toLowerCase().trim();
+  if(!q){closeAc('brand-ac');return;}
+  const m=BRAND_DB.filter(b=>b.name.toLowerCase().startsWith(q)||b.name.toLowerCase().includes(q)).slice(0,8);
+  if(!m.length){closeAc('brand-ac');return;}
+  document.getElementById('brand-ac').innerHTML=m.map(b=>`<div class="ac-item" onmousedown="pickBrand('${esc(b.name)}','${esc(b.country)}')"><span class="ac-item-name">${esc(b.name)}</span><span class="ac-item-country">${esc(b.country)}</span></div>`).join('');
+  document.getElementById('brand-ac').classList.add('open');
+}
+function onBrandKey(e){
+  const list=document.getElementById('brand-ac'),items=list.querySelectorAll('.ac-item');
+  if(!list.classList.contains('open'))return;
+  if(e.key==='ArrowDown'){e.preventDefault();const n=Math.min([...items].findIndex(el=>el.classList.contains('focused'))+1,items.length-1);items.forEach((el,i)=>el.classList.toggle('focused',i===n));}
+  else if(e.key==='ArrowUp'){e.preventDefault();const n=Math.max([...items].findIndex(el=>el.classList.contains('focused'))-1,0);items.forEach((el,i)=>el.classList.toggle('focused',i===n));}
+  else if(e.key==='Enter'){const f=list.querySelector('.focused');if(f)f.onmousedown();}
+  else if(e.key==='Escape')closeAc('brand-ac');
+}
+function pickBrand(name,country){
+  document.getElementById('f-brand').value=name;
+  if(!document.getElementById('f-country').value)document.getElementById('f-country').value=country;
+  closeAc('brand-ac');
+  _variants=(BRAND_DB.find(b=>b.name===name)||{}).variants||[];
+  document.getElementById('f-name').focus();
+}
+function onNameFocus(){
+  const brand=document.getElementById('f-brand').value;
+  const found=BRAND_DB.find(b=>b.name.toLowerCase()===brand.toLowerCase());
+  _variants=found?found.variants:[];
+  if(_variants.length)onNameInput();
+}
+function onNameInput(){
+  const q=document.getElementById('f-name').value.toLowerCase().trim();
+  if(!_variants.length){closeAc('name-ac');return;}
+  const m=q?_variants.filter(v=>v.toLowerCase().includes(q)):_variants;
+  if(!m.length){closeAc('name-ac');return;}
+  document.getElementById('name-ac').innerHTML=m.slice(0,8).map(v=>`<div class="ac-item" onmousedown="pickName('${esc(v)}')"><span class="ac-item-name">${esc(v)}</span></div>`).join('');
+  document.getElementById('name-ac').classList.add('open');
+}
+function onNameKey(e){
+  const list=document.getElementById('name-ac'),items=list.querySelectorAll('.ac-item');
+  if(!list.classList.contains('open'))return;
+  if(e.key==='ArrowDown'){e.preventDefault();const n=Math.min([...items].findIndex(el=>el.classList.contains('focused'))+1,items.length-1);items.forEach((el,i)=>el.classList.toggle('focused',i===n));}
+  else if(e.key==='ArrowUp'){e.preventDefault();const n=Math.max([...items].findIndex(el=>el.classList.contains('focused'))-1,0);items.forEach((el,i)=>el.classList.toggle('focused',i===n));}
+  else if(e.key==='Enter'){const f=list.querySelector('.focused');if(f)f.onmousedown();}
+  else if(e.key==='Escape')closeAc('name-ac');
+}
+function pickName(v){document.getElementById('f-name').value=v;closeAc('name-ac');}
+function closeAc(id){document.getElementById(id).classList.remove('open');}
+
+// ─── WISHLIST TOGGLE ─────────────────────────────────────────────────────
+function toggleWishlist(){
+  formIsWishlist=!formIsWishlist;
+  document.getElementById('wishlist-toggle-label').innerHTML=formIsWishlist
+    ?'Added to <strong style="color:var(--blue)">Wishlist</strong>'
+    :'Add to <strong>Collection</strong>';
+  document.getElementById('wishlist-toggle-icon').textContent=formIsWishlist?'♡':'📦';
+  document.getElementById('wishlist-toggle-row').style.background=formIsWishlist?'var(--blue-light)':'';
+}
+
+// ─── STRENGTH ────────────────────────────────────────────────────────────
+function setStrength(v){
+  formStrength=v;
+  document.querySelectorAll('.strength-dot-btn').forEach(btn=>btn.classList.toggle('lit',parseInt(btn.dataset.v)<=v));
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────
+function renderGrid(){
+  const grid=document.getElementById('collection-grid');
+  const q=document.getElementById('search-input').value.toLowerCase().trim();
+
+  // split collection vs wishlist
+  const ownedPacks=collection.filter(p=>!p.wishlist);
+  const wishPacks=collection.filter(p=>p.wishlist);
+
+  document.getElementById('count-collection').textContent=ownedPacks.length;
+  document.getElementById('count-wishlist').textContent=wishPacks.length;
+
+  let items=currentSection==='wishlist'?[...wishPacks]:[...ownedPacks];
+  if(currentFmt)items=items.filter(p=>p.format===currentFmt);
+  if(q)items=items.filter(p=>(p.brand+p.name+p.variant+p.country+p.notes).toLowerCase().includes(q));
+  if(currentSort==='newest')items.sort((a,b)=>b.addedAt-a.addedAt);
+  else if(currentSort==='score')items.sort((a,b)=>totalScore(b)-totalScore(a));
+  else if(currentSort==='name')items.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(currentSort==='brand')items.sort((a,b)=>a.brand.localeCompare(b.brand));
+
+  if(!items.length){
+    const isWish=currentSection==='wishlist';
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">${isWish?'♡':'📦'}</div><div class="empty-title">${q?'No results':(isWish?'Wishlist empty':'No packs yet')}</div><div class="empty-sub">${q?'Try a different search':(isWish?'Add a pack and mark it as Wishlist':'Tap "+ Add" to start your archive')}</div></div>`;
+    updateStats();return;
+  }
+  grid.innerHTML=items.map(p=>packCardHTML(p)).join('');
+  updateStats();
+}
+
+function packCardHTML(p){
+  const sc=totalScore(p);
+  const img=p.img?`<img src="${p.img}" alt="${esc(p.brand)}" loading="lazy">`:`<div class="pack-no-img"><div class="pack-no-img-icon">📦</div><div class="pack-no-img-label">No photo</div></div>`;
+  const badge=p.format?`<div class="pack-badge">${esc(p.format)}</div>`:'';
+  const wishRibbon=p.wishlist?`<div class="wish-ribbon">Wishlist</div>`:'';
+  const scoreEl=sc>0?`<span class="pack-score${sc>=95?' score-exc':sc>=90?' score-out':''}">${sc}</span>`:'';
+  const sdots=[1,2,3,4,5].map(i=>`<span class="sdot${i<=(p.strength||0)?' lit':''}"></span>`).join('');
+  return`<div class="pack-card" onclick="openDetail('${p.id}')">
+    <div class="pack-img-wrap">${img}${badge}${wishRibbon}</div>
+    <div class="pack-info">
+      <div class="pack-brand">${esc(p.brand)}</div>
+      <div class="pack-name">${esc(p.name)}</div>
+      ${p.variant?`<div class="pack-variant">${esc(p.variant)}</div>`:''}
+      <div class="pack-meta">
+        <div class="strength-dots">${sdots}</div>
+        ${scoreEl||`<span class="pack-country">${esc(p.country||'')}</span>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent=collection.filter(p=>!p.wishlist).length;
+  document.getElementById('stat-brands').textContent=new Set(collection.filter(p=>!p.wishlist).map(p=>p.brand.toLowerCase())).size;
+  const scored=collection.filter(p=>!p.wishlist&&totalScore(p)>0);
+  document.getElementById('stat-avg').textContent=scored.length?(scored.reduce((s,p)=>s+totalScore(p),0)/scored.length).toFixed(0):'—';
+}
+
+// ─── RANKINGS ────────────────────────────────────────────────────────────
+function renderRankings(){
+  const list=document.getElementById('rankings-list');
+  const sorted=[...collection].filter(p=>!p.wishlist).sort((a,b)=>totalScore(b)-totalScore(a));
+  if(!sorted.length){list.innerHTML=`<div class="empty-rankings"><div style="font-size:2rem;margin-bottom:10px">☆</div><div style="font-family:'Playfair Display',serif;font-size:1.1rem">No packs scored yet</div></div>`;return;}
+  list.innerHTML=sorted.map((p,i)=>{
+    const sc=totalScore(p);
+    const img=p.img?`<img class="rank-img" src="${p.img}" alt="">`:`<div class="rank-img-placeholder">📦</div>`;
+    const scStyle=sc>0?`background:${scoreColor(sc)};color:#fff`:'';
+    const sdots=[1,2,3,4,5].map(n=>`<span class="sdot${n<=(p.strength||0)?' lit':''}"></span>`).join('');
+    return`<div class="ranking-item" onclick="openDetail('${p.id}')">
+      <div class="rank-num${i<3?' gold':''}">${i+1}</div>${img}
+      <div class="rank-info">
+        <div class="rank-brand">${esc(p.brand)}</div>
+        <div class="rank-name">${esc(p.name)}</div>
+        ${p.variant?`<div class="rank-variant">${esc(p.variant)}</div>`:''}
+        <div class="rank-meta"><div class="strength-dots">${sdots}</div><span style="font-size:0.66rem;color:var(--text-faint)">${sc>0?scoreClass(sc):''}</span></div>
+      </div>
+      <div class="rank-score-big" style="${scStyle}">${sc>0?sc:'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────
+function switchTab(tab){
+  document.getElementById('tab-collection').classList.toggle('active',tab==='collection');
+  document.getElementById('tab-rankings').classList.toggle('active',tab==='rankings');
+  document.getElementById('collection-panel').classList.toggle('hidden',tab!=='collection');
+  document.getElementById('rankings-panel').classList.toggle('active',tab==='rankings');
+  if(tab==='rankings')renderRankings();
+}
+function setView(v){
+  currentView=v;
+  document.getElementById('collection-grid').classList.toggle('list-view',v==='list');
+  document.getElementById('vbtn-grid').classList.toggle('active',v==='grid');
+  document.getElementById('vbtn-list').classList.toggle('active',v==='list');
+}
+
+// ─── FORM ────────────────────────────────────────────────────────────────
+function openAddModal(){
+  editingId=null;document.getElementById('form-modal-title').textContent='Add New Pack';
+  clearForm();document.getElementById('form-overlay').classList.add('open');
+}
+function openEditModal(id){
+  const p=collection.find(x=>x.id===id);if(!p)return;
+  editingId=id;document.getElementById('form-modal-title').textContent='Edit Pack';
+  document.getElementById('f-brand').value=p.brand||'';
+  document.getElementById('f-name').value=p.name||'';
+  document.getElementById('f-variant').value=p.variant||'';
+  document.getElementById('f-country').value=p.country||'';
+  document.getElementById('f-format').value=p.format||'';
+  document.getElementById('f-acquired').value=p.acquired||'';
+  document.getElementById('f-notes').value=p.notes||'';
+  document.getElementById('f-tar').value=p.tar||'';
+  document.getElementById('f-nic').value=p.nicotine||'';
+  const sc=p.scores||{};
+  ['collect','ash','design','bitter','after'].forEach(k=>{const el=document.getElementById('s-'+k);if(el)el.value=sc[k]||0;});
+  updateScoreTotal();
+  setStrength(p.strength||0);
+  formIsWishlist=!!p.wishlist;
+  // sync wishlist toggle visual
+  document.getElementById('wishlist-toggle-label').innerHTML=formIsWishlist
+    ?'Added to <strong style="color:var(--blue)">Wishlist</strong>'
+    :'Add to <strong>Collection</strong>';
+  document.getElementById('wishlist-toggle-icon').textContent=formIsWishlist?'♡':'📦';
+  document.getElementById('wishlist-toggle-row').style.background=formIsWishlist?'var(--blue-light)':'';
+  currentImgDataUrl=p.img||'';
+  const prev=document.getElementById('img-preview');
+  if(p.img){prev.src=p.img;prev.classList.add('show');}else{prev.src='';prev.classList.remove('show');}
+  _variants=(BRAND_DB.find(b=>b.name===p.brand)||{}).variants||[];
+  document.getElementById('form-overlay').classList.add('open');
+}
+function closeFormModal(){document.getElementById('form-overlay').classList.remove('open');clearForm();}
+function clearForm(){
+  ['f-brand','f-name','f-variant','f-country','f-acquired','f-notes','f-tar','f-nic'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-format').value='';
+  document.getElementById('img-file-input').value='';
+  const p=document.getElementById('img-preview');p.src='';p.classList.remove('show');
+  document.getElementById('ai-query').value='';
+  setAiStatus('Type brand + name, hit Auto-fill');
+  ['collect','ash','design','bitter','after'].forEach(k=>{const el=document.getElementById('s-'+k);if(el)el.value=0;});
+  updateScoreTotal();setStrength(0);
+  formIsWishlist=false;
+  document.getElementById('wishlist-toggle-label').innerHTML='Add to <strong>Collection</strong>';
+  document.getElementById('wishlist-toggle-icon').textContent='📦';
+  document.getElementById('wishlist-toggle-row').style.background='';
+  currentImgDataUrl='';editingId=null;_variants=[];
+  closeAc('brand-ac');closeAc('name-ac');
+}
+function handleImgUpload(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{currentImgDataUrl=ev.target.result;const p=document.getElementById('img-preview');p.src=currentImgDataUrl;p.classList.add('show');};r.readAsDataURL(f);
+}
+function savePack(){
+  const brand=document.getElementById('f-brand').value.trim();
+  const name=document.getElementById('f-name').value.trim();
+  if(!brand||!name){showToast('Brand and Name are required');return;}
+  const sc={};
+  ['collect','ash','design','bitter','after'].forEach(k=>{sc[k]=parseInt(document.getElementById('s-'+k).value)||0;});
+  const pack={
+    id:editingId||uid(),brand,name,
+    variant:document.getElementById('f-variant').value.trim(),
+    country:document.getElementById('f-country').value.trim(),
+    format:document.getElementById('f-format').value,
+    acquired:document.getElementById('f-acquired').value.trim(),
+    notes:document.getElementById('f-notes').value.trim(),
+    tar:document.getElementById('f-tar').value?parseFloat(document.getElementById('f-tar').value):null,
+    nicotine:document.getElementById('f-nic').value?parseFloat(document.getElementById('f-nic').value):null,
+    scores:sc,strength:formStrength,wishlist:formIsWishlist,
+    img:currentImgDataUrl,
+    addedAt:editingId?(collection.find(x=>x.id===editingId)?.addedAt||Date.now()):Date.now()
+  };
+  if(editingId){collection[collection.findIndex(x=>x.id===editingId)]=pack;showToast('Pack updated');}
+  else{collection.unshift(pack);showToast(formIsWishlist?'Added to wishlist':'Pack added to archive');}
+  saveData();renderGrid();closeFormModal();closeDetailModal();
+}
+
+// ─── DETAIL ──────────────────────────────────────────────────────────────
+function openDetail(id){
+  const p=collection.find(x=>x.id===id);if(!p)return;
+  const sc=p.scores||{},total=totalScore(p);
+  const img=p.img?`<img class="detail-img" src="${p.img}" alt="">`:`<div class="detail-img-placeholder">📦</div>`;
+  const wishBadge=p.wishlist?`<span class="detail-wish-badge">♡ Wishlist</span>`:'';
+  const fields=[];
+  if(p.format)fields.push(['Format',p.format]);
+  if(p.country)fields.push(['Country',p.country]);
+  if(p.acquired)fields.push(['Acquired',p.acquired]);
+  if(p.tar)fields.push(['Tar',p.tar+'mg']);
+  if(p.nicotine)fields.push(['Nicotine',p.nicotine+'mg']);
+  const sdots=[1,2,3,4,5].map(i=>`<span class="sdot${i<=(p.strength||0)?' lit':''}" style="width:9px;height:9px"></span>`).join('');
+  if(p.strength)fields.push(['Strength','<span style="display:flex;gap:3px">'+sdots+'</span>']);
+  const gridHtml=fields.length?`<div class="detail-grid">${fields.map(([l,v])=>`<div class="detail-field"><div class="detail-field-label">${l}</div><div class="detail-field-val">${v.includes('<')?v:esc(v)}</div></div>`).join('')}</div>`:'';
+  const catNames={collect:'Collectability',ash:'Ash Stability',design:'Pack Design',bitter:'Smoothness',after:'Aftertaste'};
+  const scoreBreakdown=total>0?`<div class="score-breakdown"><div class="score-breakdown-title">Score breakdown</div>${Object.entries(catNames).map(([k,label])=>`<div class="score-bar-row"><span class="score-bar-label">${label}</span><div class="score-bar-track"><div class="score-bar-fill" style="width:${((sc[k]||0)/20)*100}%"></div></div><span class="score-bar-val">${sc[k]||0}/20</span></div>`).join('')}</div>`:'';
+  const bigScore=total>0?`<div class="big-score"><span class="big-score-num" style="color:${scoreColor(total)}">${total}</span><span class="big-score-denom">/100</span><span style="background:${scoreColor(total)};color:#fff;padding:2px 8px;border-radius:4px;font-size:0.68rem;font-weight:500;margin-left:6px">${scoreClass(total)}</span></div>`:'';
+  document.getElementById('detail-body').innerHTML=`
+    ${img}
+    <div class="detail-brand">${esc(p.brand)}</div>
+    <div class="detail-name">${esc(p.name)}</div>
+    ${p.variant?`<div class="detail-variant">${esc(p.variant)}</div>`:''}
+    ${wishBadge}${bigScore}${gridHtml}${scoreBreakdown}
+    ${p.notes?`<div class="detail-notes">${esc(p.notes)}</div>`:''}
+    <div class="detail-actions">
+      <button class="btn-edit" onclick="editFromDetail('${p.id}')">Edit</button>
+      <button class="btn-delete" onclick="deletePack('${p.id}')">Delete</button>
+    </div>`;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+function editFromDetail(id){closeDetailModal();setTimeout(()=>openEditModal(id),180);}
+function closeDetailModal(){document.getElementById('detail-overlay').classList.remove('open');}
+function deletePack(id){if(!confirm('Remove this pack?'))return;collection=collection.filter(x=>x.id!==id);saveData();renderGrid();closeDetailModal();showToast('Pack removed');}
+function overlayClick(e,id){if(e.target.id===id){if(id==='form-overlay')closeFormModal();else closeDetailModal();}}
+
+// ─── GITHUB SYNC ─────────────────────────────────────────────────────────
+// TextEncoder → Uint8Array → base64: handles ALL Unicode (emoji, CJK, etc.)
+function utf8ToBase64(str){
+  const bytes=new TextEncoder().encode(str);
+  let bin='';
+  bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin);
+}
+function base64ToUtf8(b64){
+  // strip ALL whitespace GitHub may insert (newlines, spaces)
+  const clean=b64.replace(/\s/g,'');
+  const bin=atob(clean);
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+async function ghPush(){
+  const token=document.getElementById('gh-token').value.trim();
+  const repo=document.getElementById('gh-repo').value.trim();
+  if(!token||!repo){setSyncStatus('Enter token and repo first');return;}
+  localStorage.setItem('cig_ghtoken',token);
+  localStorage.setItem('cig_ghrepo',repo);
+  setSyncStatus('Pushing…');
+  try{
+    // get current SHA (needed for update)
+    let sha='';
+    const getRes=await fetch(`https://api.github.com/repos/${repo}/contents/collection.json`,{
+      headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github.v3+json'}
+    });
+    if(getRes.ok){const j=await getRes.json();sha=j.sha||'';}
+
+    const content=utf8ToBase64(JSON.stringify(collection,null,2));
+    const body={message:'Update collection',content};
+    if(sha)body.sha=sha;
+
+    const putRes=await fetch(`https://api.github.com/repos/${repo}/contents/collection.json`,{
+      method:'PUT',
+      headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(putRes.ok){
+      setSyncStatus('✓ Pushed to GitHub');
+    }else{
+      const err=await putRes.json().catch(()=>({}));
+      setSyncStatus('Failed: '+(err.message||putRes.status));
+    }
+  }catch(e){setSyncStatus('Error: '+e.message);}
+}
+
+async function ghPull(){
+  const token=document.getElementById('gh-token').value.trim();
+  const repo=document.getElementById('gh-repo').value.trim();
+  if(!token||!repo){setSyncStatus('Enter token and repo first');return;}
+  setSyncStatus('Pulling…');
+  try{
+    const getRes=await fetch(`https://api.github.com/repos/${repo}/contents/collection.json`,{
+      headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github.v3+json'}
+    });
+    if(!getRes.ok){setSyncStatus('File not found — push first');return;}
+    const j=await getRes.json();
+
+    let decoded;
+    if(j.encoding==='base64'){
+      decoded=base64ToUtf8(j.content);
+    }else if(j.content){
+      decoded=j.content;
+    }else{
+      // fallback: fetch raw download URL
+      const raw=await fetch(j.download_url);
+      decoded=await raw.text();
+    }
+
+    const parsed=JSON.parse(decoded);
+    if(!Array.isArray(parsed))throw new Error('Invalid data format');
+    collection=parsed;
+    saveData();renderGrid();
+    setSyncStatus('✓ Pulled — '+collection.length+' packs');
+    showToast('Collection synced');
+  }catch(e){setSyncStatus('Error: '+e.message);}
+}
+
+function setSyncStatus(msg){const el=document.getElementById('sync-status');if(el)el.textContent=msg;}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2300);}
+
+// ─── INIT ────────────────────────────────────────────────────────────────
+initTheme();loadData();renderGrid();updateStats();
+</script>
+</body>
+</html>
